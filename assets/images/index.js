@@ -1,0 +1,18 @@
+export const IMAGES = {
+  CourseTab: require('./book.png'),
+  HomeTab: require('./Logo.png'),
+  SettingTab: require('./Setting.png'),
+  BG: require('./background.png'),
+  c1: require('./c1.png'),
+  c2: require('./c2.png'),
+  c3: require('./c3.png'),
+  c4: require('./c4.png'),
+  c5: require('./c5.png'),
+  c6: require('./c6.png'),
+  imageProfile: require('./imageProfile.png'),
+  Logo: require('./LogoAPP.png'),
+  Search: require('./SearchBlack.png'),
+  Course: require('./course.png'),
+  Play: require('./play.png'),
+  Back: require('./BackBlack.png'),
+}
