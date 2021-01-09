@@ -30,12 +30,15 @@ const selectecTabColor = (b) => {
 const CourseScreen = (props) => {
   const courseBoughtUnverify = useSelector((state) => state?.course?.courseBoughtUnverify)
   const courseUploadVerify = useSelector((state) => state?.course?.courseUploadVerify)
+  const accountType = useSelector((state) => state?.user?.accountType)
 
   const { navigation } = props
   const [search, setSearch] = useState('')
+  const titleT1 = accountType === 'AD' ? `Unconfimred (${courseBoughtUnverify?.length})` : `Bought (${courseBoughtUnverify?.length})`
+  const titleT2 = accountType === 'AD' ? `Confirmed  (${courseUploadVerify?.length})` : `Uploaded (${courseUploadVerify?.length})`
   const [routesTabView] = useState([
-    { key: 'bought', title: `Đã mua (${courseBoughtUnverify?.length})` },
-    { key: 'upload', title: `Đã đăng (${courseUploadVerify?.length})` },
+    { key: 'boughtUnverify', title: titleT1 },
+    { key: 'uploadVerify', title: titleT2 },
   ])
   const dispatch = useDispatch()
   useEffect(() => {
@@ -43,10 +46,10 @@ const CourseScreen = (props) => {
   })
   const renderScene = ({ route }) => {
     switch (route.key) {
-      case 'bought':
-        return <BoughtView navigation={navigation} />
-      case 'upload':
-        return <UploadView navigation={navigation} />
+      case 'boughtUnverify':
+        return <BoughtView navigation={navigation} search={search} />
+      case 'uploadVerify':
+        return <UploadView navigation={navigation} search={search} />
       default:
     }
   }
@@ -90,7 +93,7 @@ const CourseScreen = (props) => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Khóa  học" transparent comWhite />
+      <Header title="COURSE" transparent comWhite />
       <View style={styles.container}>
         <View style={styles.search}>
           <FastImage
@@ -105,8 +108,10 @@ const CourseScreen = (props) => {
           />
           <TextInput
             style={{ ...TextStyles.semiBold, padding: 0, flex: 1 }}
-            onChangeText={(t) => { setSearch(t) }}
-            placeholder="Tìm theo mã"
+            onChangeText={(t) => {
+              setSearch(t)
+            }}
+            placeholder="Search"
             value={search}
             onFocus={() => { setSearch('') }}
           />

@@ -9,8 +9,6 @@ import MainTabbar from '../components/share/MainTabbar'
 
 const Tab = createBottomTabNavigator()
 const BottomTab = (props) => {
-  const { navigation, route } = props
-
   return (
     <Tab.Navigator
       tabBar={(pro) => <MainTabbar {...pro} />}
@@ -19,19 +17,19 @@ const BottomTab = (props) => {
       <Tab.Screen
         name={SCREEN_NAME.MAIN.COURSESCEEN}
         component={BackgroundHOC(CourseScreen)}
-        options={{ title: 'Khóa học' }}
+        options={{ title: 'Course' }}
       />
       <Tab.Screen
         name={SCREEN_NAME.MAIN.HOMESCEEN}
         component={BackgroundHOC(HomeScreen)}
         options={{
-          title: 'Trang chủ',
+          title: 'Home',
         }}
       />
       <Tab.Screen
         name={SCREEN_NAME.MAIN.SETTINGSCEEN}
         component={BackgroundHOC(SettingScreen)}
-        options={{ title: 'Cài đặt' }}
+        options={{ title: 'Setting' }}
       />
 
     </Tab.Navigator>

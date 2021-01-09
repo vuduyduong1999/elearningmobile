@@ -28,32 +28,52 @@ const LoginScreen = () => {
       if (response) {
         if (response?.success) {
           const { token, accountType } = response?.data
-          Helpers.showMess('Đăng nhập thành công!!!', 'success')
-          dispatch(courseAction.GET_RECENT({ token }, (res) => {
-            if (!res?.success) {
-              Helpers.showMess('Không thể  lấý những khóa học đã xem gần đây!!!')
-            } else {
-              dispatch(courseAction.GET_BOUGHT({ token }, (respo) => {
-                if (respo?.success) {
-                  if (accountType === 'AT') {
-                    dispatch(courseAction.GET_UPLOAD({ token }, (rs) => {
-                      if (!rs?.success) {
-                        Helpers.showMess('Không thể  danh sách video đã tải....!!!')
+          if (accountType !== 'AD') {
+            Helpers.showMess('Sign in successfully ....!!!', 'success')
+            dispatch(courseAction.GET_RECENT({ token }, (res) => {
+              if (!res?.success) {
+                Helpers.showMess('Cant get recent course!!!')
+              } else {
+                dispatch(courseAction.GET_BOUGHT({ token }, (respo) => {
+                  if (respo?.success) {
+                    if (accountType === 'AT') {
+                      dispatch(courseAction.GET_UPLOAD({ token }, (rs) => {
+                        if (!rs?.success) {
+                          Helpers.showMess('Couldnt get your uploaded course!!!')
+                        }
+                      }))
+                    }
+                  } else {
+                    Helpers.showMess('Cant get recent bought course....!!!')
+                  }
+                }))
+              }
+            }))
+          } else {
+            dispatch(courseAction.GET_NEW_UNVERIFY({ token }, (res) => {
+              if (res?.success) {
+                dispatch(courseAction.GET_UNVERIFY({ token }, (rs) => {
+                  if (rs?.success) {
+                    dispatch(courseAction.GET_VERIFY({}, (rsp) => {
+                      if (!rsp?.success) {
+                        Helpers.showMess('Cant get all verify course...!!!')
                       }
                     }))
+                  } else {
+                    Helpers.showMess('Cant get all unverify course...!!!')
                   }
-                } else {
-                  Helpers.showMess('Không thể  lấý những khóa học đã mua gần đây!!!')
-                }
-              }))
-            }
-          }))
+                }))
+              } else {
+                Helpers.showMess('Cant get newest unverify course...!!!')
+              }
+            }))
+          }
           NavigationHelper.navigateReplaceScreen(SCREEN_NAME.MAINBOTTOM)
         } else {
-          Helpers.showMess('Không thể đăng nhập!!!')
+          Helpers.showMess('Cant sign in...!!!')
         }
       } else {
-        Helpers.showMess('Không thể đăng nhập!!!')
+        Helpers.showMess('Cant sign in ....!!!')
       }
     }))
   }

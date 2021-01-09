@@ -6,6 +6,7 @@ import * as Animatable from 'react-native-animatable'
 import FastImage from 'react-native-fast-image'
 import { useSelector, useDispatch } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
+import { createFilter } from 'react-native-search-filter'
 import { IMAGES } from '../../../assets/images'
 import { COLORS, TextStyles } from '../../../assets/styles'
 import { Text } from '../../components'
@@ -16,11 +17,17 @@ import { courseAction } from '../../redux/actions'
 const { width } = Dimensions.get('window')
 const rate = width / 375
 const BoughtView = (props) => {
-  const { } = props
+  const { search } = props
   const courseBoughtUnverify = useSelector((state) => state?.course?.courseBoughtUnverify)
+  const fillterCourse = courseBoughtUnverify.filter(createFilter(search, ['tenKhoaHoc']))
+
+  const accountType = useSelector((state) => state?.user?.accountType)
+  const contend = accountType === 'AD' ? 'Nothing' : 'You can buy course in website....!'
+
   const renderItem = ({ item, index }) => {
     return <BoughtItem data={item} index={index} />
   }
+
   return (
     <View style={{ flex: 1, alignItems: 'center' }}>
       {courseBoughtUnverify.length === 0
@@ -28,12 +35,10 @@ const BoughtView = (props) => {
           ...TextStyles.optionBold, color: COLORS.WHITE, marginTop: 50 * rate, textAlign: 'center', marginHorizontal: 15 * rate,
         }}
         >
-          {' '}
-          Bạn chưa mua khóa học nào cả
-          {' '}
+          {contend}
         </Text>}
       <FlatList
-        data={courseBoughtUnverify}
+        data={fillterCourse}
         extraData={courseBoughtUnverify}
         renderItem={renderItem}
         key="flashlist1"
@@ -60,7 +65,9 @@ const styles = StyleSheet.create({
   },
 })
 const BoughtItem = ({ data, index }) => {
+  console.tron.log({ data })
   const dispatch = useDispatch()
+  const accountType = useSelector((state) => state?.user?.accountType)
   const token = useSelector((state) => state.user?.token)
   const minutes = data?.tongThoiLuong?.hours * 60 + data?.tongThoiLuong?.minute
   const handlePress = () => {
@@ -99,14 +106,23 @@ const BoughtItem = ({ data, index }) => {
             <Text style={{ ...TextStyles.semiBold }}>
               {data?.tenKhoaHoc}
             </Text>
-            <Text style={{ color: 'black' }}>
-              Tiến độ:
+            {accountType === 'AD' ? <Text style={{ color: 'black' }}>
+              Thời hạn :
+              {' '}
               <Text style={{ ...TextStyles.semiBold }}>
+                {data?.thoiHan}
                 {' '}
-                {data?.progress?.percent * 100}
-                %
+                month
               </Text>
             </Text>
+              : <Text style={{ color: 'black' }}>
+                Progress:
+                <Text style={{ ...TextStyles.semiBold }}>
+                  {' '}
+                  {data?.progress?.percent * 100}
+                  %
+                </Text>
+              </Text>}
             <Text style={{ color: COLORS.GREY }}>
               <Text style={{ ...TextStyles.semiBold }}>{data?.soLuongBaiGiang}</Text>
               {' '}
@@ -114,7 +130,7 @@ const BoughtItem = ({ data, index }) => {
               {' '}
               <Text style={{ ...TextStyles.semiBold }}>{minutes}</Text>
               {' '}
-              phút
+              minutes
             </Text>
           </View>
         </LinearGradient>

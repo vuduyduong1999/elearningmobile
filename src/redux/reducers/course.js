@@ -15,15 +15,14 @@ const userReducer = (state = initState, action) => {
       return {
         ...state, courseHome: data,
       }
-    case courseType.GET_BOUGHT_COURSE_SUCCESS:
+    case courseType.GET_BOUGHT_UNVERIFY_COURSE_SUCCESS:
       return {
         ...state, courseBoughtUnverify: data,
       }
-    case courseType.GET_UPLOAD_COURSE_SUCCESS:
+    case courseType.GET_UPLOAD_VERIFY_COURSE_SUCCESS:
       return {
         ...state, courseUploadVerify: data,
       }
-
     default:
       return state
   }

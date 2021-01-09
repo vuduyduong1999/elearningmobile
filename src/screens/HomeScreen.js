@@ -14,10 +14,12 @@ const HomeScreen = (props) => {
   const { } = props
   const courseHome = useSelector((state) => state?.course?.courseHome)
   const renderItem = ({ item }) => <ItemRecent title={item.tenKhoaHoc} />
+  const accountType = useSelector((state) => state?.user?.accountType)
+  const contend = accountType === 'AD' ? 'Newest unconfirmed :' : 'Recent :'
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 * rate }}>
 
-      <Header title="Trang chủ" transparent comWhite />
+      <Header title="HOME" transparent comWhite />
       <View style={{ alignItems: 'center' }}>
         <SwiperImage arrayImage={[IMAGES.c1, IMAGES.c2, IMAGES.c3, IMAGES.c4]} style={{ width: 295 * rate, height: 220 * rate }} />
       </View>
@@ -25,7 +27,7 @@ const HomeScreen = (props) => {
         ...TextStyles.optionBold, color: COLORS.WHITE, fontSize: 14 * rate, marginTop: 14 * rate,
       }}
       >
-        Xem gần đây :
+        {contend}
       </Text>
       <FlatList
         data={courseHome}

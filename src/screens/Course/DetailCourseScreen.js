@@ -7,25 +7,91 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as Animatable from 'react-native-animatable'
 import LinearGradient from 'react-native-linear-gradient'
 import _ from 'lodash'
-import { Header, Text } from '../../components'
+import { Header, ModalConfirm, Text } from '../../components'
 import { IMAGES } from '../../../assets/images'
 import { Helpers, NavigationHelper } from '../../utils'
 import { COLORS, TextStyles } from '../../../assets/styles'
+import { courseAction } from '../../redux/actions'
 
 const { width } = Dimensions.get('window')
 const rate = width / 375
 const DetailCourseScreen = (props) => {
+  const dispatch = useDispatch()
+  const [isDelete, setIsDelete] = useState(false)
+  const [isVerify, setIsVerify] = useState(false)
   const accountType = useSelector((state) => state?.user?.accountType)
+  const token = useSelector((state) => state?.user?.token)
   const { route } = props
   const { params } = route
   console.tron.log({ params })
   const textStyleVerify = params?.trangThai === 0 ? { color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
-  const textVerify = params?.trangThai === 0 ? 'Chưa duyệt' : 'Đã duyệt'
+  const textVerify = params?.trangThai === 0 ? 'Unconfirmed' : 'Confirmed'
   const arrayVideo = params?.arrayVideo
   const seen = params?.progress?.seen || 0
   const { owner, trangThai = 0 } = params
-  const setIsConfirm = (r) => { }
-  const handleVerify = () => { }
+  const handleVerify = () => {
+    dispatch(courseAction.VERIFY_COURSE({ token, maKH: params?.id }, (response) => {
+      if (response?.success) {
+        NavigationHelper.navigationToBack()
+        dispatch(courseAction.GET_UNVERIFY({ token }, (res) => {
+          if (res?.success) {
+            dispatch(courseAction.GET_VERIFY({ token }, (rss) => {
+              if (rss?.success) {
+                Helpers.showMess('Verify is successfully...', 'success')
+              } else {
+                Helpers.showMess('Cant get verify course...')
+              }
+            }))
+          } else {
+            Helpers.showMess("Can't get unverify course...!")
+          }
+        }))
+      } else {
+        Helpers.showMess('Verify is FAILINGGG...',)
+      }
+    }))
+  }
+  const adminDelete = () => {
+    dispatch(courseAction.DELETE_COURSE({ token, maKH: params?.id }, (response) => {
+      if (response?.success) {
+        NavigationHelper.navigationToBack()
+        dispatch(courseAction.GET_UNVERIFY({ token }, (res) => {
+          if (res?.success) {
+            dispatch(courseAction.GET_VERIFY({ token }, (rss) => {
+              if (rss?.success) {
+                Helpers.showMess('Delete is successfully...', 'success')
+              } else {
+                Helpers.showMess('Cant get verify course...')
+              }
+            }))
+          } else {
+            Helpers.showMess("Can't get unverify course...!")
+          }
+        }))
+      } else {
+        Helpers.showMess('Delete is FAILINGGG...',)
+      }
+    }))
+  }
+  const teacherDelete = () => {
+    dispatch(courseAction.DELETE_COURSE({ token, maKH: params?.id }, (response) => {
+      if (response?.success) {
+        NavigationHelper.navigationToBack()
+        dispatch(courseAction.GET_UPLOAD({ token }, (res) => {
+          if (res?.success) {
+            Helpers.showMess('Delete is successfully...', 'success')
+          } else {
+            Helpers.showMess("Can't get uploaded course...!")
+          }
+        }))
+      } else {
+        Helpers.showMess('Delete is FAILINGGG...',)
+      }
+    }))
+  }
+  const handleDelete = () => {
+    return accountType === 'AD' ? adminDelete() : teacherDelete()
+  }
   const renderUser = () => {
     if (owner) {
       return (<View
@@ -36,7 +102,7 @@ const DetailCourseScreen = (props) => {
         }}
       >
         <TouchableOpacity onPress={() => {
-          setIsConfirm(true)
+          setIsDelete(true)
         }}
         >
           <LinearGradient
@@ -51,7 +117,7 @@ const DetailCourseScreen = (props) => {
               paddingHorizontal: 50 * rate,
             }}
           >
-            <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Xóa</Text>
+            <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Delete</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>)
@@ -64,7 +130,7 @@ const DetailCourseScreen = (props) => {
         style={{ paddingHorizontal: 15 * rate, flexDirection: 'row', justifyContent: 'space-around' }}
       >
         <TouchableOpacity onPress={() => {
-          setIsConfirm(true)
+          setIsDelete(true)
         }}
         >
           <LinearGradient
@@ -79,14 +145,13 @@ const DetailCourseScreen = (props) => {
               paddingHorizontal: 30 * rate,
             }}
           >
-            <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Xóa</Text>
+            <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Delete</Text>
           </LinearGradient>
         </TouchableOpacity>
         { tt === 0
-          && <TouchableOpacity onPress={handleVerify}>
+          && <TouchableOpacity onPress={() => { setIsVerify(true) }}>
             <LinearGradient
               colors={['#221159', '#9EECD9']}
-              // locations={[0, 0]}
               start={{ x: 0.0, y: 1 }}
               end={{ x: 1, y: 0 }}
               style={{
@@ -98,7 +163,7 @@ const DetailCourseScreen = (props) => {
                 paddingHorizontal: 30 * rate,
               }}
             >
-              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Duyệt</Text>
+              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Confirm</Text>
             </LinearGradient>
           </TouchableOpacity>}
       </View>
@@ -109,6 +174,18 @@ const DetailCourseScreen = (props) => {
   }, [])
   return (
     <View style={{ flex: 1 }}>
+      <ModalConfirm
+        isVisible={isDelete}
+        handleOff={() => { setIsDelete(false) }}
+        handleConfirm={handleDelete}
+        title="Bạn chắc chắn muốn xóa khóa học này!!!"
+      />
+      <ModalConfirm
+        isVisible={isVerify}
+        handleOff={() => { setIsVerify(false) }}
+        handleConfirm={handleVerify}
+        title="Bạn chắc chắn muốn duyệt khóa học này!!!"
+      />
       <Header
         title={Helpers.truncateString(params?.tenKhoaHoc, 20)}
         imageLeft={IMAGES.Back}
@@ -146,7 +223,7 @@ const DetailCourseScreen = (props) => {
               ...TextStyles.semiBold, color: COLORS.WHITE, width: 320 * rate, marginTop: 10 * rate,
             }}
             >
-              Danh sách video
+              Lession:
             </Text>
           </View>
           <View />
@@ -155,7 +232,7 @@ const DetailCourseScreen = (props) => {
               ...TextStyles.optionBold, color: COLORS.WHITE, marginTop: 50 * rate, textAlign: 'center', marginHorizontal: 15 * rate,
             }}
             >
-              Chưa có video nào trong khóa học
+              No lession ...
             </Text>}
           </View>
 
@@ -184,9 +261,10 @@ const styles = StyleSheet.create({
   },
 })
 const VideoItem = ({ data, index, seen = 0 }) => {
+  const accountType = useSelector((state) => state?.user?.accountType)
   const minutes = data?.thoiLuong?.hours * 60 + data?.thoiLuong?.minute || 0
-  const textStyleVerify = index > seen ? { color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
-  const textSeen = index <= seen ? 'Đã xem' : 'Chưa xem'
+  const textStyleVerify = index > seen ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
+  const textSeen = accountType === 'AD' ? '' : index <= seen ? 'Seen' : 'NotSeen'
   return (
     <Animatable.View
       animation="fadeInUp"
@@ -208,7 +286,7 @@ const VideoItem = ({ data, index, seen = 0 }) => {
         />
         <View style={{ justifyContent: 'space-between' }}>
           <Text style={{ ...TextStyles.semiBold }}>
-            {data?.tieuDe}
+            {Helpers.truncateString(data?.tieuDe, 20)}
           </Text>
           <Text style={{}}>
             <Text style={{ ...TextStyles.semiBold }}>{minutes}</Text>
@@ -217,7 +295,7 @@ const VideoItem = ({ data, index, seen = 0 }) => {
           </Text>
         </View>
         <View style={{ position: 'absolute', bottom: 15 * rate, right: 15 * rate }}>
-          <Text style={{ ...textStyleVerify, textAlign: 'right' }}>{textSeen}</Text>
+          <Text style={{ ...textStyleVerify, textAlign: 'right', fontSize: 12 * rate }}>{textSeen}</Text>
         </View>
       </LinearGradient>
     </Animatable.View>

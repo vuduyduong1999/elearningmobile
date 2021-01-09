@@ -6,6 +6,7 @@ import * as Animatable from 'react-native-animatable'
 import FastImage from 'react-native-fast-image'
 import { useSelector, useDispatch } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
+import { createFilter } from 'react-native-search-filter'
 import { IMAGES } from '../../../assets/images'
 import { COLORS, TextStyles } from '../../../assets/styles'
 import { Text } from '../../components'
@@ -16,10 +17,17 @@ import { courseAction } from '../../redux/actions'
 const { width } = Dimensions.get('window')
 const rate = width / 375
 const UploadView = (props) => {
-  const { } = props
+  const { search } = props
+  console.log('===============================================')
+  console.log('search', search)
+  console.log('===============================================')
   const courseUploadVerify = useSelector((state) => state?.course?.courseUploadVerify)
   const courses = courseUploadVerify.sort((a, b) => b.id - a.id)
+  const fillterCourse = courses.filter(createFilter(search, ['tenKhoaHoc']))
   const accountType = useSelector((state) => state?.user?.accountType)
+  const contend = accountType === 'AD' ? 'Nothing' : accountType === 'ST'
+    ? 'You must became teacher to upload course...!!' : 'Not yet upload course!!!'
+
   const renderItem = ({ item, index }) => {
     return <UploadItem data={item} index={index} />
   }
@@ -30,10 +38,10 @@ const UploadView = (props) => {
           ...TextStyles.optionBold, color: COLORS.WHITE, marginTop: 50 * rate, textAlign: 'center', marginHorizontal: 15 * rate,
         }}
         >
-          {accountType === 'ST' ? 'Bạn cần trờ thành giảng viên để có thể đăng tải khóa học.' : 'Bạn chưa đăng tải khóa học nào'}
+          {contend}
         </Text>}
       <FlatList
-        data={courses}
+        data={fillterCourse}
         extraData={courseUploadVerify}
         key="flashlist2"
         renderItem={renderItem}
@@ -63,7 +71,7 @@ const UploadItem = ({ data, index }) => {
   const token = useSelector((state) => state.user?.token)
   const minutes = data?.tongThoiLuong?.hours * 60 + data?.tongThoiLuong?.minute
   const textStyleVerify = data?.trangThai === 0 ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
-  const textVerify = data?.trangThai === 0 ? 'Chưa duyệt' : 'Đã duyệt'
+  const textVerify = data?.trangThai === 0 ? 'Unconfirmed' : 'Confirm'
   const handlePress = () => {
     let arrayVideo = []
     let owner = false
@@ -100,7 +108,7 @@ const UploadItem = ({ data, index }) => {
               {data?.tenKhoaHoc}
             </Text>
             <Text style={{ color: 'black' }}>
-              Số lượt mua:
+              Sold:
               <Text style={{ ...TextStyles.semiBold }}>
                 {' '}
                 {data?.soLuongDaBan}
@@ -114,7 +122,7 @@ const UploadItem = ({ data, index }) => {
               {' '}
               <Text style={{ ...TextStyles.semiBold }}>{minutes}</Text>
               {' '}
-              phút
+              minutes
             </Text>
           </View>
           <View style={{ position: 'absolute', bottom: 15 * rate, right: 15 * rate }}>

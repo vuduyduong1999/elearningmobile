@@ -49,7 +49,7 @@ const UserScreen = () => {
         handleOff={() => { setIsConfirm(false) }}
         handleConfirm={handleConfirm}
       />
-      <Header title="Cài đặt" transparent comWhite />
+      <Header title="SETTING" transparent comWhite />
       <View style={styles.avatar}>
         <View style={{ width: 80 * rate, height: 80 * rate }}>
           <FastImage
@@ -61,16 +61,6 @@ const UserScreen = () => {
             }}
             resizeMode="contain"
           />
-          {/* <View style={styles.edit}>
-              <FastImage
-                source={IMAGES.Edit}
-                style={{
-                  height: 12 * rate,
-                  width: 12 * rate,
-                }}
-                resizeMode="contain"
-              />
-            </View> */}
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -81,7 +71,7 @@ const UserScreen = () => {
           </View> */}
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
-              Họ tên
+              Full name
             </Text>
             <Text style={styles.value}>
               {profile?.hoVaTen}
@@ -89,7 +79,7 @@ const UserScreen = () => {
           </View>
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
-              Số điện thoại
+              Phone
             </Text>
             <Text style={styles.value}>
               {profile?.sdt}
@@ -97,7 +87,7 @@ const UserScreen = () => {
           </View>
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
-              Giới tính
+              Gender
             </Text>
             <Text style={styles.value}>
               {profile?.gioTinh}
@@ -105,7 +95,7 @@ const UserScreen = () => {
           </View>
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
-              Ngày sinh
+              Birthday
             </Text>
             <Text style={styles.value}>{profile?.ngaySinh}</Text>
           </View>
@@ -126,7 +116,7 @@ const UserScreen = () => {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Đăng xuất</Text>
+                <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>LOG OUT</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
