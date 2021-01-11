@@ -70,7 +70,7 @@ const LoginScreen = () => {
           }
           NavigationHelper.navigateReplaceScreen(SCREEN_NAME.MAINBOTTOM)
         } else {
-          Helpers.showMess('Cant sign in...!!!')
+          Helpers.showMess(response?.message)
         }
       } else {
         Helpers.showMess('Cant sign in ....!!!')

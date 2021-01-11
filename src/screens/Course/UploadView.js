@@ -18,9 +18,6 @@ const { width } = Dimensions.get('window')
 const rate = width / 375
 const UploadView = (props) => {
   const { search } = props
-  console.log('===============================================')
-  console.log('search', search)
-  console.log('===============================================')
   const courseUploadVerify = useSelector((state) => state?.course?.courseUploadVerify)
   const courses = courseUploadVerify.sort((a, b) => b.id - a.id)
   const fillterCourse = courses.filter(createFilter(search, ['tenKhoaHoc']))
@@ -70,8 +67,8 @@ const UploadItem = ({ data, index }) => {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.user?.token)
   const minutes = data?.tongThoiLuong?.hours * 60 + data?.tongThoiLuong?.minute
-  const textStyleVerify = data?.trangThai === 0 ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
-  const textVerify = data?.trangThai === 0 ? 'Unconfirmed' : 'Confirm'
+  const textStyleVerify = data?.trangThai === 0 ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.VERIFY }
+  const textVerify = data?.trangThai === 0 ? 'Unconfirmed' : 'Confirmed'
   const handlePress = () => {
     let arrayVideo = []
     let owner = false

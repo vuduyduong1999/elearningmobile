@@ -8,6 +8,7 @@ export const COLORS = {
   PRIMARY_RED: '#F9504A',
   BLUE: '#3241CE',
   UNVERIFY: '#8B0505',
+  VERIFY: '#33A242',
 }
 const { width } = Dimensions.get('window')
 const rate = width / 375
@@ -88,15 +89,13 @@ export const MessageStyles = {
     style: {
       backgroundColor: COLORS.PRIMARY_RED,
       alignItems: 'center',
-      borderColor: COLORS.WHITE,
-      borderWidth: 2 * rate,
     },
     duration: 2000,
     titleStyle: TextStyles.bold,
   },
   success: {
     style: {
-      backgroundColor: COLORS.BLUE,
+      backgroundColor: COLORS.VERIFY,
       alignItems: 'center',
       borderColor: COLORS.WHITE,
       borderWidth: 2 * rate,

@@ -30,7 +30,32 @@ const DetailCourseScreen = (props) => {
   const seen = params?.progress?.seen || 0
   const { owner, trangThai = 0 } = params
   const handleVerify = () => {
+    return trangThai === 1 ? unverifyfnc() : verifyfnc()
+  }
+  const verifyfnc = () => {
     dispatch(courseAction.VERIFY_COURSE({ token, maKH: params?.id }, (response) => {
+      if (response?.success) {
+        NavigationHelper.navigationToBack()
+        dispatch(courseAction.GET_UNVERIFY({ token }, (res) => {
+          if (res?.success) {
+            dispatch(courseAction.GET_VERIFY({ token }, (rss) => {
+              if (rss?.success) {
+                Helpers.showMess('Verify is successfully...', 'success')
+              } else {
+                Helpers.showMess('Cant get verify course...')
+              }
+            }))
+          } else {
+            Helpers.showMess("Can't get unverify course...!")
+          }
+        }))
+      } else {
+        Helpers.showMess('Verify is FAILINGGG...',)
+      }
+    }))
+  }
+  const unverifyfnc = () => {
+    dispatch(courseAction.UNVERIFY_COURSE({ token, maKH: params?.id }, (response) => {
       if (response?.success) {
         NavigationHelper.navigationToBack()
         dispatch(courseAction.GET_UNVERIFY({ token }, (res) => {
@@ -149,7 +174,7 @@ const DetailCourseScreen = (props) => {
           </LinearGradient>
         </TouchableOpacity>
         { tt === 0
-          && <TouchableOpacity onPress={() => { setIsVerify(true) }}>
+          ? <TouchableOpacity onPress={() => { setIsVerify(true) }}>
             <LinearGradient
               colors={['#221159', '#9EECD9']}
               start={{ x: 0.0, y: 1 }}
@@ -165,6 +190,23 @@ const DetailCourseScreen = (props) => {
             >
               <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Confirm</Text>
             </LinearGradient>
+          </TouchableOpacity>
+          : <TouchableOpacity onPress={() => { setIsVerify(true) }}>
+            <LinearGradient
+              colors={['#221159', '#9EECD9']}
+              start={{ x: 0.0, y: 1 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                flex: 1,
+                height: 50 * rate,
+                borderRadius: 10 * rate,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 30 * rate,
+              }}
+            >
+              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Unconfirmed</Text>
+            </LinearGradient>
           </TouchableOpacity>}
       </View>
     )
@@ -178,13 +220,14 @@ const DetailCourseScreen = (props) => {
         isVisible={isDelete}
         handleOff={() => { setIsDelete(false) }}
         handleConfirm={handleDelete}
-        title="Bạn chắc chắn muốn xóa khóa học này!!!"
+        title="Are you sure you will delete this course...!!!"
       />
       <ModalConfirm
         isVisible={isVerify}
         handleOff={() => { setIsVerify(false) }}
         handleConfirm={handleVerify}
-        title="Bạn chắc chắn muốn duyệt khóa học này!!!"
+        title={trangThai ? 'Are you sure you will unconfirm this course...!!!' : 'Are you sure you will confirm this course...!!!'}
+
       />
       <Header
         title={Helpers.truncateString(params?.tenKhoaHoc, 20)}
@@ -210,7 +253,25 @@ const DetailCourseScreen = (props) => {
           >
             {params?.tenKhoaHoc}
           </Text>
-          {params?.owner && <Text style={{ ...textStyleVerify, marginTop: 0 * rate }}>{textVerify}</Text>}
+          {params?.owner && <Text style={{ ...textStyleVerify, marginTop: 0 * rate, fontSize: 17 * rate }}>{textVerify}</Text>}
+          {params?.expired && <Text style={{
+            ...TextStyles.semiBold,
+            color: COLORS.UNVERIFY,
+            marginTop: 0 * rate,
+            fontSize: 17 * rate,
+          }}
+          >
+            Expired
+          </Text>}
+          {params?.warning && <Text style={{
+            ...TextStyles.semiBold,
+            color: COLORS.UNVERIFY,
+            marginTop: 0 * rate,
+            fontSize: 17 * rate,
+          }}
+          >
+            Warning expired
+          </Text>}
           <Text style={{
             ...TextStyles.latoRegular, color: COLORS.WHITE, width: 320 * rate, marginTop: 10 * rate,
           }}
@@ -260,11 +321,11 @@ const styles = StyleSheet.create({
     marginBottom: 15 * rate,
   },
 })
-const VideoItem = ({ data, index, seen = 0 }) => {
+const VideoItem = ({ data, index, seen }) => {
   const accountType = useSelector((state) => state?.user?.accountType)
   const minutes = data?.thoiLuong?.hours * 60 + data?.thoiLuong?.minute || 0
-  const textStyleVerify = index > seen ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.BLUE }
-  const textSeen = accountType === 'AD' ? '' : index <= seen ? 'Seen' : 'NotSeen'
+  const textStyleVerify = index >= seen ? { ...TextStyles.semiBold, color: COLORS.UNVERIFY } : { ...TextStyles.semiBold, color: COLORS.VERIFY }
+  const textSeen = accountType === 'AD' ? '' : (seen !== null ? (index < seen ? 'Seen' : 'UnSeen') : 'UnSeen')
   return (
     <Animatable.View
       animation="fadeInUp"

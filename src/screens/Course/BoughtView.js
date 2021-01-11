@@ -107,19 +107,19 @@ const BoughtItem = ({ data, index }) => {
               {data?.tenKhoaHoc}
             </Text>
             {accountType === 'AD' ? <Text style={{ color: 'black' }}>
-              Thời hạn :
+              Duration :
               {' '}
               <Text style={{ ...TextStyles.semiBold }}>
                 {data?.thoiHan}
                 {' '}
-                month
               </Text>
+              month
             </Text>
               : <Text style={{ color: 'black' }}>
                 Progress:
                 <Text style={{ ...TextStyles.semiBold }}>
                   {' '}
-                  {data?.progress?.percent * 100}
+                  {(data?.progress?.percent * 100).toFixed(0)}
                   %
                 </Text>
               </Text>}

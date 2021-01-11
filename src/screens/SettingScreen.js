@@ -79,6 +79,15 @@ const UserScreen = () => {
           </View>
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
+              Money
+            </Text>
+            <Text style={styles.value}>
+              {profile?.soDu}
+              <Text style={[styles.value, { color: COLORS.VERIFY }]}> $</Text>
+            </Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
               Phone
             </Text>
             <Text style={styles.value}>
@@ -149,7 +158,7 @@ const ModalConfirm = ({ isVisible, handleConfirm, handleOff }) => {
         padding: 15 * rate,
       }}
       >
-        <Text style={{ ...TextStyles.latoblackSmall }}>Bạn chắc chắn muốn đăng xuất?</Text>
+        <Text style={{ ...TextStyles.latoblackSmall }}>Do you want LOG OUT in app???</Text>
         <View style={{
           flexDirection: 'row',
           width: 315 * rate,
@@ -175,7 +184,7 @@ const ModalConfirm = ({ isVisible, handleConfirm, handleOff }) => {
                 alignItems: 'center',
               }}
             >
-              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Đồng ý</Text>
+              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>YES</Text>
             </LinearGradient>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleOff}>
@@ -188,7 +197,7 @@ const ModalConfirm = ({ isVisible, handleConfirm, handleOff }) => {
               backgroundColor: COLORS.GREY_LIGHT,
             }}
             >
-              <Text style={{ ...TextStyles.latoblackSmall }}>Hủy</Text>
+              <Text style={{ ...TextStyles.latoblackSmall }}>NO</Text>
             </View>
           </TouchableOpacity>
         </View>

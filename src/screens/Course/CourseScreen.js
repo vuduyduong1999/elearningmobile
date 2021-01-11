@@ -34,13 +34,12 @@ const CourseScreen = (props) => {
 
   const { navigation } = props
   const [search, setSearch] = useState('')
-  const titleT1 = accountType === 'AD' ? `Unconfimred (${courseBoughtUnverify?.length})` : `Bought (${courseBoughtUnverify?.length})`
-  const titleT2 = accountType === 'AD' ? `Confirmed  (${courseUploadVerify?.length})` : `Uploaded (${courseUploadVerify?.length})`
+  const titleT1 = accountType === 'AD' ? `Uncensored (${courseBoughtUnverify?.length})` : `Bought (${courseBoughtUnverify?.length})`
+  const titleT2 = accountType === 'AD' ? `Censored  (${courseUploadVerify?.length})` : `Uploaded (${courseUploadVerify?.length})`
   const [routesTabView] = useState([
     { key: 'boughtUnverify', title: titleT1 },
     { key: 'uploadVerify', title: titleT2 },
   ])
-  const dispatch = useDispatch()
   useEffect(() => {
 
   })

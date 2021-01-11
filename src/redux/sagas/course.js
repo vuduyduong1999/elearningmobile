@@ -12,6 +12,7 @@ export default function* userSagas() {
   yield takeLatest(courseType.GET_UNVERIFY, getUnverify)
   yield takeLatest(courseType.GET_VERIFY, getVerify)
   yield takeLatest(courseType.VERIFY_COURSE, verify)
+  yield takeLatest(courseType.UNVERIFY_COURSE, unverify)
   yield takeLatest(courseType.DELETE_COURSE, deleteCourse)
 }
 
@@ -22,6 +23,25 @@ function* deleteCourse(action) {
     console.log(data)
     const response = yield call(
       () => axios.post(`${URL}/api/khoahoc/delete`, {
+        token,
+        maKH,
+      })
+    )
+    callback(response?.data)
+  } catch (error) {
+    console.log('===============================================')
+    console.log('error', error)
+    console.log('===============================================')
+    callback({ success: false, message: error.message })
+  }
+}
+function* unverify(action) {
+  const { data, callback } = action.payload
+  try {
+    const { token, maKH } = data
+    console.log(data)
+    const response = yield call(
+      () => axios.post(`${URL}/api/khoahoc/verify/un`, {
         token,
         maKH,
       })
@@ -58,7 +78,7 @@ function* getVerify(action) {
   try {
     const { token } = data
     const response = yield call(
-      () => axios.post(`${URL}/api/khoahoc`, {
+      () => axios.post(`${URL}/api/khoahoc/all`, {
         token,
       })
     )

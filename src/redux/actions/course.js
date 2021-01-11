@@ -49,6 +49,12 @@ export const VERIFY_COURSE = (data, callback) => {
     payload: { data, callback },
   }
 }
+export const UNVERIFY_COURSE = (data, callback) => {
+  return {
+    type: courseType.UNVERIFY_COURSE,
+    payload: { data, callback },
+  }
+}
 export const DELETE_COURSE = (data, callback) => {
   return {
     type: courseType.DELETE_COURSE,

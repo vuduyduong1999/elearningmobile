@@ -60,7 +60,7 @@ const ModalConfirm = ({
                 alignItems: 'center',
               }}
             >
-              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>Đồng ý</Text>
+              <Text style={{ ...TextStyles.latoblackSmall, color: COLORS.WHITE }}>YES</Text>
             </LinearGradient>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleOff}>
@@ -73,7 +73,7 @@ const ModalConfirm = ({
               backgroundColor: COLORS.GREY_LIGHT,
             }}
             >
-              <Text style={{ ...TextStyles.latoblackSmall }}>Hủy</Text>
+              <Text style={{ ...TextStyles.latoblackSmall }}>NO</Text>
             </View>
           </TouchableOpacity>
         </View>
