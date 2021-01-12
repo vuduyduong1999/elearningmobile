@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // import { createSelector } from 'reselect'
 import Modal from 'react-native-modal'
 import { createSelector } from 'reselect'
+import moment from 'moment'
 import { Helpers, NavigationHelper } from '../utils'
 import { Header, Text } from '../components'
 import { IMAGES } from '../../assets/images'
@@ -27,6 +28,8 @@ const UserScreen = () => {
   // const { } = props
   const token = useSelector(createSelector((state) => state.user, (user) => user.token))
   const profile = useSelector(createSelector((state) => state.user, (user) => user.profile))
+  console.tron.log({ profile })
+  const acctype = profile?.ma === 'AD' ? 'Admin' : profile?.ma === 'ST' ? 'Student' : 'Author'
   const [isConfirm, setIsConfirm] = useState(false)
   useEffect(() => {
     dispatch(userAction.GET_PROFILE({ token }, (response) => {
@@ -79,6 +82,18 @@ const UserScreen = () => {
           </View>
           <View style={styles.item}>
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
+              Account type
+            </Text>
+            <Text style={styles.value}>
+              {acctype}
+              {' '}
+              (
+              {profile?.ma}
+              )
+            </Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
               Money
             </Text>
             <Text style={styles.value}>
@@ -106,7 +121,7 @@ const UserScreen = () => {
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
               Birthday
             </Text>
-            <Text style={styles.value}>{profile?.ngaySinh}</Text>
+            <Text style={styles.value}>{moment(profile?.ngaySinh).format('DD-MM-yyyy')}</Text>
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity onPress={() => {

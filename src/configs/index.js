@@ -30,7 +30,7 @@ const TAB_DATA = [
 ]
 
 // const URL = 'http://192.168.1.7:3000'
-const URL = 'http://192.168.61.50:3000'
+const URL = 'https://elearningdl.herokuapp.com'
 // const URL = 'http://192.168.1.6:3000'
 // const URL = 'http://192.168.1.106:3000'
 export {
