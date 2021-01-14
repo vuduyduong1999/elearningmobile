@@ -121,7 +121,7 @@ const UserScreen = () => {
             <Text style={{ color: COLORS.WHITE, marginBottom: 0 }}>
               Birthday
             </Text>
-            <Text style={styles.value}>{moment(profile?.ngaySinh).format('DD-MM-yyyy')}</Text>
+            <Text style={styles.value}>{moment(profile.ngaySinh).format('DD-MM-yyyy') || ''}</Text>
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity onPress={() => {
